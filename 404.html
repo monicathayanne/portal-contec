@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>CONTEC · O sistema mudou de endereço</title>
+<link rel="icon" href="https://sistema.portalcontec.com.br/favicon.png" type="image/png">
+<meta name="theme-color" content="#000A30">
+<noscript><meta http-equiv="refresh" content="6; url=https://sistema.portalcontec.com.br/"></noscript>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    min-height: 100vh; display: grid; place-items: center; padding: 24px;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif; color: #fff;
+    background: radial-gradient(1200px 600px at 50% -10%, #12205c 0%, #000A30 60%) #000A30;
+  }
+  .cartao {
+    width: 100%; max-width: 460px; text-align: center; padding: 40px 32px 32px;
+    background: rgba(255,255,255,.04); border: 1px solid rgba(232,185,63,.25); border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.35);
+  }
+  .logo { width: 210px; max-width: 70%; margin: 0 auto 26px; display: block; }
+  .selo { display: inline-block; background: #E8B93F; color: #000A30; font-weight: 800; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 6px 14px; border-radius: 99px; margin-bottom: 16px; }
+  h1 { font-size: 24px; font-weight: 900; line-height: 1.25; margin-bottom: 12px; }
+  p { color: #cfd6ee; font-size: 15px; line-height: 1.55; }
+  p b { color: #fff; }
+  .endereco { display: block; margin: 18px 0 22px; font-weight: 800; color: #E8B93F; font-size: 16px; word-break: break-all; }
+  .botao {
+    display: block; width: 100%; padding: 15px; border-radius: 12px; background: #E8B93F; color: #000A30;
+    font-weight: 900; font-size: 16px; text-decoration: none; transition: transform .15s, box-shadow .15s;
+  }
+  .botao:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(232,185,63,.35); }
+  .contagem { margin-top: 14px; font-size: 13px; color: #8f9bc4; }
+  .rodape { margin-top: 26px; font-size: 12px; color: #6f7aa6; }
+</style>
+</head>
+<body>
+  <main class="cartao">
+    <img class="logo" src="https://sistema.portalcontec.com.br/logo.png" alt="CONTEC Contabilidade & Assessoria">
+    <span class="selo">Novo endereço</span>
+    <h1 id="titulo">As ferramentas da CONTEC mudaram de lugar</h1>
+    <p>Agora tudo fica no <b>sistema da CONTEC</b>, com acesso pelo seu login.</p>
+    <span class="endereco">sistema.portalcontec.com.br</span>
+    <a class="botao" id="botao" href="https://sistema.portalcontec.com.br/">Entrar no sistema</a>
+    <p class="contagem" id="contagem">Você será levado automaticamente em <b id="seg">5</b> segundos.</p>
+    <p class="rodape">Salve o novo endereço nos favoritos. Sem login? Fale com a administração do escritório.</p>
+  </main>
+
+<script>
+(function () {
+  var BASE = 'https://sistema.portalcontec.com.br';
+  // repositório antigo -> página no sistema novo
+  var DESTINOS = {
+    'portal-contec':              { url: '/',                                   nome: 'O Portal de Ferramentas' },
+    'projeto-protocolo-web':      { url: '/ferramentas/protocolo.html',         nome: 'O Protocolo de Entrega' },
+    'gerador-etiquetas':          { url: '/ferramentas/etiquetas.html',         nome: 'O Emissor de Etiquetas' },
+    'gerador-escritura-contec':   { url: '/ferramentas/escrituras.html',        nome: 'O Emissor de Escrituras' },
+    'emissor-faturamento':        { url: '/ferramentas/faturamento.html',       nome: 'A Relação de Faturamento' },
+    'simulador-rescisao':         { url: '/ferramentas/rescisao.html',          nome: 'O Simulador de Rescisão' },
+    'multa-rescisoria':           { url: '/ferramentas/rescisao.html',          nome: 'O Simulador de Multa do FGTS' },
+    'gerador-contratos-servicos': { url: '/ferramentas/contrato-servicos.html', nome: 'O Gerador de Contratos' },
+    'gerador-comunicado':         { url: '/ferramentas/comunicados.html',       nome: 'O Gerador de Comunicados' },
+    'organizador-tarefas':        { url: '/tarefas.html',                       nome: 'O Organizador de Tarefas' },
+    'mapa-empresas':              { url: '/mapa.html',                          nome: 'O Mapa de Acompanhamento' }
+  };
+  var repo = (location.pathname.split('/')[1] || '').toLowerCase();
+  var d = DESTINOS[repo] || DESTINOS['portal-contec'];
+  var destino = BASE + d.url;
+
+  document.getElementById('botao').href = destino;
+  if (repo && DESTINOS[repo] && repo !== 'portal-contec') {
+    document.getElementById('titulo').textContent = d.nome + ' mudou de endereço';
+  }
+
+  // remove o service worker antigo, se o portal foi instalado como app
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function (rs) { rs.forEach(function (r) { r.unregister(); }); }).catch(function () {});
+  }
+
+  var s = 5, el = document.getElementById('seg');
+  var t = setInterval(function () {
+    s--; el.textContent = s;
+    if (s <= 0) { clearInterval(t); location.replace(destino); }
+  }, 1000);
+})();
+</script>
+</body>
+</html>
